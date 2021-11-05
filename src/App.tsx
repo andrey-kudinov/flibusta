@@ -1,52 +1,48 @@
 import './App.css';
 
-import React, { useState } from 'react';
-
-import logo from './logo.svg';
+import React, { useEffect, useState } from 'react';
 
 function App() {
-  const [count, setCount] = useState(0);
+  const [data, setData] = useState<null | string>(null);
+  // const [el, setEl] = useState(null);
+  const name = 'перемены';
+  const urlFlibusta = `http://flibusta.is/booksearch`;
+  const proxy = 'https://cors-anywhere.herokuapp.com/';
 
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p className="header">
-          🚀 Vite + React + Typescript 🤘 & <br />
-          Eslint 🔥+ Prettier
-        </p>
+  const url = new URL(urlFlibusta);
+  url.searchParams.set('ask', name);
+  url.searchParams.set('chb', 'on');
 
-        <div className="body">
-          <button onClick={() => setCount((count) => count + 1)}>
-            🪂 Click me : {count}
-          </button>
+  useEffect(() => {
+    const fetchFlibusta = async () => {
+      const response = await fetch(proxy + url);
+      const fetchData = await response.text();
+      console.log('fetchData -', JSON.stringify(fetchData).indexOf('<h3'));
+      console.log(
+        'fetchData -',
+        JSON.stringify(fetchData).indexOf('</a></li>\n</ul><br>'),
+      );
+      console.log(
+        'fetchData -',
+        JSON.stringify(fetchData).slice(116, 20402) + '</ul><br>',
+      );
+      console.log('!');
+      setData(JSON.stringify(fetchData).slice(116, 20402) + '</ul><br>');
+    };
+    console.log('!!!');
 
-          <p> Don&apos;t forgot to install Eslint and Prettier in Your Vscode.</p>
+    fetchFlibusta();
+  }, []);
 
-          <p>
-            Mess up the code in <code>App.tsx </code> and save the file.
-          </p>
-          <p>
-            <a
-              className="App-link"
-              href="https://reactjs.org"
-              target="_blank"
-              rel="noopener noreferrer">
-              Learn React
-            </a>
-            {' | '}
-            <a
-              className="App-link"
-              href="https://vitejs.dev/guide/features.html"
-              target="_blank"
-              rel="noopener noreferrer">
-              Vite Docs
-            </a>
-          </p>
-        </div>
-      </header>
-    </div>
-  );
+  useEffect(() => {
+    if (data) {
+      const el = document.createElement('html');
+      // el.innerHTML = data;
+      console.log(el.querySelectorAll('ul'));
+    }
+  }, [data]);
+
+  return <div className="App"></div>;
 }
 
 export default App;
