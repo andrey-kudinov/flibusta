@@ -1,10 +1,9 @@
 import './App.css';
 
-import React, { useEffect, useState } from 'react';
+// import { jsdom } from 'jsdom';
+import React, { useEffect } from 'react';
 
 function App() {
-  const [data, setData] = useState<null | string>(null);
-  // const [el, setEl] = useState(null);
   const name = 'перемены';
   const urlFlibusta = `http://flibusta.is/booksearch`;
   const proxy = 'https://cors-anywhere.herokuapp.com/';
@@ -17,31 +16,17 @@ function App() {
     const fetchFlibusta = async () => {
       const response = await fetch(proxy + url);
       const fetchData = await response.text();
-      console.log('fetchData -', JSON.stringify(fetchData).indexOf('<h3'));
-      console.log(
-        'fetchData -',
-        JSON.stringify(fetchData).indexOf('</a></li>\n</ul><br>'),
-      );
-      console.log(
-        'fetchData -',
-        JSON.stringify(fetchData).slice(116, 20402) + '</ul><br>',
-      );
       console.log('!');
-      setData(JSON.stringify(fetchData).slice(116, 20402) + '</ul><br>');
+      console.log(fetchData);
+
+      // const { JSDOM } = jsdom;
+      // const dom = new JSDOM(`<!DOCTYPE html><p>Hello world</p>`);
+      // console.log(dom.window.document.querySelector('p').textContent);
     };
     console.log('!!!');
 
     fetchFlibusta();
   }, []);
-
-  useEffect(() => {
-    if (data) {
-      const el = document.createElement('html');
-      // el.innerHTML = data;
-      console.log(el.querySelectorAll('ul'));
-    }
-  }, [data]);
-
   return <div className="App"></div>;
 }
 
